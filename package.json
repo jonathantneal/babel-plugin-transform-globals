@@ -1,0 +1,51 @@
+{
+  "name": "babel-plugin-transform-globals",
+  "version": "1.0.1",
+  "description": "Transform global variables in JavaScript",
+  "author": "Jonathan Neal <jonathantneal@hotmail.com>",
+  "license": "CC0-1.0",
+  "repository": "jonathantneal/babel-plugin-transform-globals",
+  "homepage": "https://github.com/jonathantneal/babel-plugin-transform-globals#readme",
+  "bugs": "https://github.com/jonathantneal/babel-plugin-transform-globals/issues",
+  "main": "index.js",
+  "module": "index.mjs",
+  "files": [
+    "index.js",
+    "index.js.map",
+    "index.mjs",
+    "index.mjs.map"
+  ],
+  "scripts": {
+    "build": "rollup --config --silent",
+    "prepublishOnly": "npm test && npm run build",
+    "pretest:tape": "npm run build",
+    "test": "npm run test:js && npm run test:tape",
+    "test:js": "eslint src/*.js src/**/*.js --cache --ignore-path .gitignore --quiet",
+    "test:tape": "node test"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "pre-commit": "^1.2.2",
+    "rollup": "^1.10.1",
+    "rollup-plugin-babel": "^4.3.2"
+  },
+  "keywords": [
+    "javascript",
+    "node",
+    "babel",
+    "babel-plugin",
+    "transform",
+    "globals",
+    "import",
+    "require",
+    "esm",
+    "cjs"
+  ]
+}
