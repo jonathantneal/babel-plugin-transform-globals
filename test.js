@@ -49,7 +49,7 @@ test(
 test(
 	'babel-plugin-transform-globals: require',
 	`window.addEventListener('click', () => {\n  document.createElement('div');\n});`,
-	`const window = require("./window");\n\nconst {\n  document\n} = window;\nwindow.addEventListener('click', () => {\n  document.createElement('div');\n});`,
+	`const window = require("./window");\nconst {\n  document\n} = window;\nwindow.addEventListener('click', () => {\n  document.createElement('div');\n});`,
 	{
 		require: {
 			'./window': {
@@ -63,7 +63,7 @@ test(
 test(
 	'babel-plugin-transform-globals: require (no default)',
 	`window.addEventListener('click', () => {\n  document.createElement('div');\n});`,
-	`const {\n  window,\n  document\n} = require("./window");\n\nwindow.addEventListener('click', () => {\n  document.createElement('div');\n});`,
+	`const {\n  window,\n  document\n} = require("./window");\nwindow.addEventListener('click', () => {\n  document.createElement('div');\n});`,
 	{
 		require: {
 			'./window': {
@@ -77,7 +77,7 @@ test(
 test(
 	'babel-plugin-transform-globals: replace + require',
 	`window.addEventListener('click', () => {\n  document.createElement('div');\n});`,
-	`const window = require("./window");\n\nwindow.addEventListener('click', () => {\n  window.document.createElement('div');\n});`,
+	`const window = require("./window");\nwindow.addEventListener('click', () => {\n  window.document.createElement('div');\n});`,
 	{
 		replace: {
 			document: 'window.document'
