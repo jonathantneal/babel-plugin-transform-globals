@@ -25,7 +25,23 @@ export default function babelPluginTransformGlobals (api, opts) {
 					const name = path.node.name;
 					const replacementIdentifier = replacementIdentifiers[name];
 
-					path.replaceWith(replacementIdentifier);
+					if (!path.parentPath.isMemberExpression({ property: path.node }) ||
+						!t.isMemberExpression(replacementIdentifier)) {
+						path.replaceWith(replacementIdentifier);
+						path.skip();
+					} else {
+						const { object: replacementObject, property: replacementProperty } = replacementIdentifier;
+						const newObject = mergeMemberExpressionObjects(
+							path.parent.object,
+							replacementObject,
+							t
+						);
+
+						path.parentPath.replaceWith(
+							t.memberExpression(newObject, replacementProperty)
+						);
+						path.parentPath.skip()
+					}
 				}
 
 				if (isImportableIdentifier(path, importIdentifiers)) {
@@ -52,4 +68,27 @@ export default function babelPluginTransformGlobals (api, opts) {
 			}
 		}
 	}
+}
+
+function mergeMemberExpressionObjects (object1, object2, t) {
+	const windowGlobalNames = ['window', 'self'];
+
+	if (t.isIdentifier(object2)) {
+		const name2 = object2.name;
+		const name1 = t.isIdentifier(object1)
+			? object1.name
+			: object1.property.name;
+
+		const hasDUplicateWindowGlobal = [name1, name2].every(name => windowGlobalNames.includes(name))
+
+		return hasDUplicateWindowGlobal
+			? object1 // drop object2
+			: t.memberExpression(object1, object2)
+	} else {
+		return t.memberExpression(
+			mergeMemberExpressionObjects(object1, object2.object),
+			object2.property
+		)
+	}
+
 }
